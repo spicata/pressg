@@ -1,10 +1,13 @@
 from os import listdir, makedirs, walk
 from os.path import isfile, join, exists
 from shutil import rmtree
+from pathlib import Path
 import re
 
 if exists("./docs/"):
     rmtree("./docs/")
+makedirs("./docs/")
+Path('./docs/.nojekyll').touch()
 
 # print(listdir())
 exhibita = list(walk('.'))
