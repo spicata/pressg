@@ -12,3 +12,19 @@ also pressg is written in python
 
 more will be soon to come
 there are no links yet because i havent added them yet lol ;-)
+
+# python cleanup and crush
+----------
+23-05-2024
+
+edited the 'pressg.py' file so that all the variables are actually variable names and not just 'exhibitx'
+also created 'crush', a bash function for easy commiting:
+
+    crush ()
+    {
+        python pressg.py && git add . && git commit -m "$1" && git push
+    }
+
+to use it, do
+
+    crush '<commit name>'
