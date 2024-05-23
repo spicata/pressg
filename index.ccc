@@ -27,4 +27,4 @@ also created 'crush', a bash function for easy commiting:
 
 to use it, do
 
-    crush '<commit name>'
+    crush '(commit name)'
