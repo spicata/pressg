@@ -49,6 +49,14 @@ for l in cFilePaths:
         linkFound = openCFile[linkStart:linkEnd]
         urlOnly = re.sub('=>\s*', '', linkFound, count=1)
         openCFile = re.sub('=>\s*https:\/\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
+    while re.search('=>\s*\/\S*', openCFile):
+        linkStart = int((re.split('[\(\),]', str(re.search('=>\s*\/\S*', openCFile))))[1])
+        linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*\/\S*', openCFile))))[2])
+        linkFound = openCFile[linkStart:linkEnd]
+        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
+        if urlOnly[-len(fileType):] == '.ccc':
+            urlOnly = urlOnly[:-len(fileType)]
+        openCFile = re.sub('=>\s*\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
     if htmlWrapper:
         tempFinalFile = open(htmlWrapper).read().replace(replacement, "<pre>\n" + openCFile + "\n</pre>")
     else:
