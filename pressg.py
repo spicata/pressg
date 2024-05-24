@@ -43,7 +43,6 @@ for k in allFilePaths:
 aa = 0
 for l in cFilePaths:
     openCFile = open(cFilePaths[aa]).read()
-    print(re.search('=>\s*https:\/\/\S*', openCFile))
     while re.search('=>\s*https:\/\/\S*', openCFile):
         linkStart = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[1])
         linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[2])
