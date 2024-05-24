@@ -1,6 +1,6 @@
 from os import listdir, makedirs, walk
 from os.path import isfile, join, exists
-from shutil import rmtree
+from shutil import rmtree, copytree
 from pathlib import Path
 import re
 
@@ -16,7 +16,8 @@ if exists(outputDir):
     rmtree(outputDir)
 makedirs(outputDir)
 Path(outputDir + '.nojekyll').touch()
-
+if exists('./assets/'):
+    copytree("./assets/", "./docs/assets/")
 
 walkedFilesList = list(walk('.'))
 allFilePaths = []
@@ -33,7 +34,7 @@ for i in walkedFilesList:
 
 z = 0
 for k in allFilePaths:
-    if allFilePaths[z][-len(fileType):] == fileType and not allFilePaths[z][:len(outputDir)] == outputDir:
+    if allFilePaths[z][-len(fileType):] == fileType and not allFilePaths[z][:len(outputDir)] == outputDir and not allFilePaths[z][:9] == "./assets/":
         cFilePaths.append(allFilePaths[z])
     if allFilePaths[z] == baseHtml:
         htmlWrapper = allFilePaths[z]
@@ -42,6 +43,13 @@ for k in allFilePaths:
 aa = 0
 for l in cFilePaths:
     openCFile = open(cFilePaths[aa]).read()
+    print(re.search('=>\s*https:\/\/\S*', openCFile))
+    while re.search('=>\s*https:\/\/\S*', openCFile):
+        linkStart = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[1])
+        linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[2])
+        linkFound = openCFile[linkStart:linkEnd]
+        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
+        openCFile = re.sub('=>\s*https:\/\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
     if htmlWrapper:
         tempFinalFile = open(htmlWrapper).read().replace(replacement, "<pre>\n" + openCFile + "\n</pre>")
     else:
