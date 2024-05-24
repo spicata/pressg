@@ -10,6 +10,7 @@ outputDir = './docs/'
 fileType = '.ccc'
 baseHtml = './html/main.html'
 replacement = '[[[content]]]'
+subUrl = '/pressg'
 
 # reset /docs/ and add .nojekyll
 if exists(outputDir):
@@ -57,7 +58,7 @@ for l in cFilePaths:
         urlOnly = re.sub('=>\s*', '', linkFound, count=1)
         if urlOnly[-len(fileType):] == '.ccc':
             urlOnly = urlOnly[:-len(fileType)]
-        openCFile = re.sub('=>\s*\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
+        openCFile = re.sub('=>\s*\/\S*', '<a href="' + subUrl + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
     while re.search('=>\s*\S*', openCFile):
         linkStart = int((re.split('[\(\),]', str(re.search('=>\s*\S*', openCFile))))[1])
         linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*\S*', openCFile))))[2])
