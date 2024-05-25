@@ -83,17 +83,24 @@ for l in cFilePaths:
     while wikilinkPattern.search(openCFile):
         wikiStart = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[1])
         wikiEnd = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[2])
-        wikiToFile = slug(openCFile[wikiStart+2:wikiEnd-2])
+        wikiContent = openCFile[wikiStart+2:wikiEnd-2]
+        if '|' in wikiContent:
+            wikiToFile = slug(wikiContent.split('|')[0])
+            wikiAlias = wikiContent.split('|')[1]
+        else:
+            wikiToFile = slug(wikiContent)
+            wikiAlias = ''
         ac = 0
         for n in allFilePaths:
             if allFilePaths[ac][1] == wikiToFile or (str(allFilePaths[ac][1]) + str(allFilePaths[ac][2])) == wikiToFile:
                 wikiPath = allFilePaths[ac][0][1:]
-                wikiDisplayName = allFilePaths[ac][1]
+                if not wikiAlias:
+                    wikiAlias = allFilePaths[ac][1]
                 if wikiPath[-4:] == '.ccc':
                     wikiPath = wikiPath[:-4]
                 break
             ac += 1
-        openCFile = wikilinkPattern.sub('<a href="' + subUrl + wikiPath + '">' + wikiDisplayName + '</a>', openCFile, count=1)
+        openCFile = wikilinkPattern.sub('<a href="' + subUrl + wikiPath + '">' + wikiAlias + '</a>', openCFile, count=1)
 
     if htmlWrapper:
         tempFinalFile = htmlWrapper.replace('{{content}}', "<pre>\n" + openCFile + "\n</pre>")
