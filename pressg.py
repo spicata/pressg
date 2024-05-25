@@ -31,6 +31,9 @@ def reLink(pattern, textString, absoluteLink):
             textString = aliasPattern.sub('<a href="' + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
     return(textString)
 
+def slug(text):
+    return(text.replace(' ', '_'))
+
 # defaults (change if you want to configure)
 # if you are on windows, replace all '/' with '\' (ctrl+h)
 outputDir = './docs/'
@@ -80,7 +83,7 @@ for l in cFilePaths:
     while wikilinkPattern.search(openCFile):
         wikiStart = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[1])
         wikiEnd = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[2])
-        wikiToFile = openCFile[wikiStart+2:wikiEnd-2]
+        wikiToFile = slug(openCFile[wikiStart+2:wikiEnd-2])
         ac = 0
         for n in allFilePaths:
             if allFilePaths[ac][1] == wikiToFile or (str(allFilePaths[ac][1]) + str(allFilePaths[ac][2])) == wikiToFile:
