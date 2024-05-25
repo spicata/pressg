@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<pre>
+# python cleanup and crush
+----------
+23-05-2024
+
+edited the 'pressg.py' file so that all the variables are actually variable names and not just 'exhibitx'
+also created 'crush', a bash function for easy commiting:
+
+    crush ()
+    {
+        python pressg.py && git add . && git commit -m "$1" && git push
+    }
+
+to use it, do
+
+    crush '(commit name)'
+
+</pre>
+</body>
+</html>
