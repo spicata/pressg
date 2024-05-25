@@ -4,8 +4,7 @@ from shutil import rmtree, copytree
 from pathlib import Path
 import re
 
-def slug(text):
-    return(text.replace(' ', '_'))
+def slug(text): return(text.replace(' ', '_'))
 
 def position(pattern, textString):
     start = int((re.split('[\(\),]', str(pattern.search(textString))))[1])
@@ -18,25 +17,21 @@ def reLink(pattern, textString, absoluteLink):
     aliasPattern = re.compile(pattern + '[^\n]*$', flags=re.M)
 
     while aliasPattern.search(textString):
-        linkAliasStart = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[1])
-        linkAliasEnd = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[2])
         linkAliasStart, linkAliasEnd = position(aliasPattern, textString)
-        linkEnd = int((re.split('[\(\),]', str(linkPattern.search(textString))))[2])
+        _, linkEnd = position(linkPattern, textString)
 
         linkAliasFound = textString[linkAliasStart:linkAliasEnd]
         linkFound = textString[linkAliasStart:linkEnd]
         aliasFound = textString[linkEnd+1:linkAliasEnd]
 
         urlOnly = re.sub('^=>\s*', '', linkFound, count=1, flags=re.M)
-        if urlOnly[-4:] == '.ccc':
+        if urlOnly[-4:] == '.ccc': 
             urlOnly = urlOnly[:-4]
-
-        if not aliasFound:
+        if not aliasFound: 
             aliasFound = urlOnly
-        
-        if absoluteLink:
+        if absoluteLink: 
             textString = aliasPattern.sub('<a href="' + subUrl + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
-        else:
+        else: 
             textString = aliasPattern.sub('<a href="' + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
     return(textString)
 
@@ -47,11 +42,11 @@ baseHtml = './html/main.html'
 subUrl = '/pressg'
 
 # reset /docs/ and add .nojekyll
-if exists(outputDir):
+if exists(outputDir): 
     rmtree(outputDir)
 makedirs(outputDir)
 Path(outputDir + '.nojekyll').touch()
-if exists('./assets/'):
+if exists('./assets/'): 
     copytree("./assets/", "./docs/assets/")
 
 walkedFilesList = list(walk('.'))
@@ -87,8 +82,7 @@ for l in cFilePaths:
     openCFile = reLink('^=>\s*\S*', openCFile, False)
     wikilinkPattern = re.compile('\[\[[^\n]*\]\]')
     while wikilinkPattern.search(openCFile):
-        wikiStart = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[1])
-        wikiEnd = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[2])
+        wikiStart, wikiEnd = position(wikilinkPattern, openCFile)
         wikiContent = openCFile[wikiStart+2:wikiEnd-2]
         if '|' in wikiContent:
             wikiToFile = slug(wikiContent.split('|')[0])
@@ -121,7 +115,7 @@ for l in cFilePaths:
         if ab != 0 and ab != (len(writeToDir) - 1):
             writeToPathAsList.append(writeToDir[ab])
             writeToPathAsListjoin = "/".join(writeToPathAsList)
-            if not exists(writeToPathAsListjoin):
+            if not exists(writeToPathAsListjoin): 
                 makedirs(writeToPathAsListjoin)
         ab += 1
     open(writeToPath, "w+").write(tempFinalFile)
