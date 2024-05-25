@@ -17,13 +17,14 @@ def reLink(pattern, textString, absoluteLink):
         linkAliasFound = textString[linkAliasStart:linkAliasEnd]
         linkFound = textString[linkAliasStart:linkEnd]
         aliasFound = textString[linkEnd+1:linkAliasEnd]
+
         urlOnly = re.sub('^=>\s*', '', linkFound, count=1, flags=re.M)
+        if urlOnly[-4:] == '.ccc':
+            urlOnly = urlOnly[:-4]
 
         if not aliasFound:
             aliasFound = urlOnly
-
-        if urlOnly[-4:] == '.ccc':
-            urlOnly = urlOnly[:-4]
+        
         if absoluteLink:
             textString = aliasPattern.sub('<a href="' + subUrl + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
         else:
