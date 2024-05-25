@@ -4,12 +4,20 @@ from shutil import rmtree, copytree
 from pathlib import Path
 import re
 
-def reLink(pattern, textString):
-    linkStart = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[1])
-    linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[2])
-    linkFound = openCFile[linkStart:linkEnd]
-    urlOnly = re.sub('=>\s*', '', linkFound, count=1)
-    openCFile = re.sub('=>\s*https:\/\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
+# not the biggest fan of functions but having three repeats seems a bit wasteful
+def reLink(pattern, textString, absoluteLink):
+    while re.search(pattern, textString):
+        linkStart = int((re.split('[\(\),]', str(re.search(pattern, textString))))[1])
+        linkEnd = int((re.split('[\(\),]', str(re.search(pattern, textString))))[2])
+        linkFound = textString[linkStart:linkEnd]
+        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
+        if urlOnly[-len(fileType):] == '.ccc':
+            urlOnly = urlOnly[:-len(fileType)]
+        if absoluteLink:
+            textString = re.sub(pattern, '<a href="' + subUrl + urlOnly + '">' + urlOnly + '</a>', textString, count=1)
+        else:
+            textString = re.sub(pattern, '<a href="' + urlOnly + '">' + urlOnly + '</a>', textString, count=1)
+    return(textString)
 
 # defaults (change if you want to configure)
 # if you are on windows, replace all '/' with '\' (ctrl+h)
@@ -51,29 +59,9 @@ for k in allFilePaths:
 aa = 0
 for l in cFilePaths:
     openCFile = open(cFilePaths[aa]).read()
-    # you could turn the following into a function
-    while re.search('=>\s*https:\/\/\S*', openCFile):
-        linkStart = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[1])
-        linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[2])
-        linkFound = openCFile[linkStart:linkEnd]
-        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
-        openCFile = re.sub('=>\s*https:\/\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
-    while re.search('=>\s*\/\S*', openCFile):
-        linkStart = int((re.split('[\(\),]', str(re.search('=>\s*\/\S*', openCFile))))[1])
-        linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*\/\S*', openCFile))))[2])
-        linkFound = openCFile[linkStart:linkEnd]
-        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
-        if urlOnly[-len(fileType):] == '.ccc':
-            urlOnly = urlOnly[:-len(fileType)]
-        openCFile = re.sub('=>\s*\/\S*', '<a href="' + subUrl + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
-    while re.search('=>\s*\S*', openCFile):
-        linkStart = int((re.split('[\(\),]', str(re.search('=>\s*\S*', openCFile))))[1])
-        linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*\S*', openCFile))))[2])
-        linkFound = openCFile[linkStart:linkEnd]
-        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
-        if urlOnly[-len(fileType):] == '.ccc':
-            urlOnly = urlOnly[:-len(fileType)]
-        openCFile = re.sub('=>\s*\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
+    openCFile = reLink('=>\s*https:\/\/\S*', openCFile, False)
+    openCFile = reLink('=>\s*\/\S*', openCFile, True)
+    openCFile = reLink('=>\s*\S*', openCFile, False)
     if htmlWrapper:
         tempFinalFile = open(htmlWrapper).read().replace(replacement, "<pre>\n" + openCFile + "\n</pre>")
     else:
