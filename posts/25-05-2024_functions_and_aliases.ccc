@@ -10,3 +10,8 @@ i'll start work on aliases now that thats figured out now
 aliases finally work
 
 => https://google.com this is a link to google!
+
+though... => isnt always very convenient, especially for intrawebsite links.
+wikilinks are next?
+
+if this works, then it should appear inline as well [[index]]

@@ -79,6 +79,21 @@ for l in cFilePaths:
     openCFile = reLink('^=>\s*https:\/\/\S*', openCFile, False)
     openCFile = reLink('^=>\s*\/\S*', openCFile, True)
     openCFile = reLink('^=>\s*\S*', openCFile, False)
+    wikilinkPattern = re.compile('\[\[[^\n]*\]\]')
+    while wikilinkPattern.search(openCFile):
+        wikiStart = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[1])
+        wikiEnd = int((re.split('[\(\),]', str(wikilinkPattern.search(openCFile))))[2])
+        wikiToFile = openCFile[wikiStart+2:wikiEnd-2]
+        ac = 0
+        for n in allFilePaths:
+            if allFilePaths[ac][1] == wikiToFile:
+                wikiPath = allFilePaths[ac][0][1:]
+                if wikiPath[-4:] == '.ccc':
+                    wikiPath = wikiPath[:-4]
+                break
+            ac += 1
+        openCFile = wikilinkPattern.sub('<a href="' + subUrl + wikiPath + '">' + wikiPath + '</a>', openCFile, count=1)
+
     if htmlWrapper:
         tempFinalFile = htmlWrapper.replace('{{content}}', "<pre>\n" + openCFile + "\n</pre>")
         tempFinalFile = tempFinalFile.replace('{{page.name}}', cFilePaths[aa][1])
