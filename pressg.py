@@ -6,25 +6,34 @@ import re
 
 # not the biggest fan of functions but having three repeats seems a bit wasteful
 def reLink(pattern, textString, absoluteLink):
-    while re.search(pattern, textString):
-        linkStart = int((re.split('[\(\),]', str(re.search(pattern, textString))))[1])
-        linkEnd = int((re.split('[\(\),]', str(re.search(pattern, textString))))[2])
-        linkFound = textString[linkStart:linkEnd]
-        urlOnly = re.sub('=>\s*', '', linkFound, count=1)
-        if urlOnly[-len(fileType):] == '.ccc':
-            urlOnly = urlOnly[:-len(fileType)]
+    linkPattern = re.compile(pattern, flags=re.M)
+    aliasPattern = re.compile(pattern + '[^\n]*$', flags=re.M)
+
+    while aliasPattern.search(textString):
+        linkAliasStart = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[1])
+        linkAliasEnd = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[2])
+        linkEnd = int((re.split('[\(\),]', str(linkPattern.search(textString))))[2])
+
+        linkAliasFound = textString[linkAliasStart:linkAliasEnd]
+        linkFound = textString[linkAliasStart:linkEnd]
+        aliasFound = textString[linkEnd+1:linkAliasEnd]
+        urlOnly = re.sub('^=>\s*', '', linkFound, count=1, flags=re.M)
+
+        if not aliasFound:
+            aliasFound = urlOnly
+
+        if urlOnly[-4:] == '.ccc':
+            urlOnly = urlOnly[:-4]
         if absoluteLink:
-            textString = re.sub(pattern, '<a href="' + subUrl + urlOnly + '">' + urlOnly + '</a>', textString, count=1)
+            textString = aliasPattern.sub('<a href="' + subUrl + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
         else:
-            textString = re.sub(pattern, '<a href="' + urlOnly + '">' + urlOnly + '</a>', textString, count=1)
+            textString = aliasPattern.sub('<a href="' + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
     return(textString)
 
 # defaults (change if you want to configure)
 # if you are on windows, replace all '/' with '\' (ctrl+h)
 outputDir = './docs/'
-fileType = '.ccc'
 baseHtml = './html/main.html'
-replacement = '[[[content]]]'
 subUrl = '/pressg'
 
 # reset /docs/ and add .nojekyll
@@ -43,30 +52,38 @@ htmlWrapper = ''
 x = 0
 for i in walkedFilesList:
     y = 0
-    for j in walkedFilesList[x][2]:
-        allFilePaths.append(join(walkedFilesList[x][0],walkedFilesList[x][2][y]))
-        y += 1
+    if '.git' not in walkedFilesList[x][0] and 'docs' not in walkedFilesList[x][0]:
+        for j in walkedFilesList[x][2]:
+            if not walkedFilesList[x][2][y].rfind('.') == 0:
+                # tempFileInfo = [path, name, extension]
+                tempFileInfo = [join(walkedFilesList[x][0],walkedFilesList[x][2][y]), walkedFilesList[x][2][y][:walkedFilesList[x][2][y].rfind('.')], walkedFilesList[x][2][y][walkedFilesList[x][2][y].rfind('.'):]]
+                allFilePaths.append(tempFileInfo)
+            # allFilePaths.append(join(walkedFilesList[x][0],walkedFilesList[x][2][y]))
+            # if 
+            y += 1
+            # allFilePaths = [[path, name, extension], [path, name, extension], ...]
     x += 1
 
 z = 0
 for k in allFilePaths:
-    if allFilePaths[z][-len(fileType):] == fileType and not allFilePaths[z][:len(outputDir)] == outputDir and not allFilePaths[z][:9] == "./assets/":
+    if allFilePaths[z][2] == '.ccc' and not allFilePaths[z][0][:len(outputDir)] == outputDir and not allFilePaths[z][0][:9] == "./assets/":
         cFilePaths.append(allFilePaths[z])
-    if allFilePaths[z] == baseHtml:
-        htmlWrapper = allFilePaths[z]
+    if allFilePaths[z][0] == baseHtml:
+        htmlWrapper = open(allFilePaths[z][0], 'r').read()
     z += 1
 
 aa = 0
 for l in cFilePaths:
-    openCFile = open(cFilePaths[aa]).read()
-    openCFile = reLink('=>\s*https:\/\/\S*', openCFile, False)
-    openCFile = reLink('=>\s*\/\S*', openCFile, True)
-    openCFile = reLink('=>\s*\S*', openCFile, False)
+    openCFile = open(cFilePaths[aa][0]).read()
+    openCFile = reLink('^=>\s*https:\/\/\S*', openCFile, False)
+    openCFile = reLink('^=>\s*\/\S*', openCFile, True)
+    openCFile = reLink('^=>\s*\S*', openCFile, False)
     if htmlWrapper:
-        tempFinalFile = open(htmlWrapper).read().replace(replacement, "<pre>\n" + openCFile + "\n</pre>")
+        tempFinalFile = htmlWrapper.replace('{{content}}', "<pre>\n" + openCFile + "\n</pre>")
+        tempFinalFile = tempFinalFile.replace('{{page.name}}', cFilePaths[aa][1])
     else:
         tempFinalFile = "<pre>\n" + openCFile + "\n</pre>"
-    writeToPath = cFilePaths[aa].replace("./", outputDir).replace(fileType, ".html")
+    writeToPath = cFilePaths[aa][0].replace("./", outputDir).replace('.ccc', ".html")
     writeToDir = writeToPath.split("/")
     writeToPathAsList = ['.']
     ab = 0
