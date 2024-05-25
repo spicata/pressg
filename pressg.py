@@ -4,6 +4,13 @@ from shutil import rmtree, copytree
 from pathlib import Path
 import re
 
+def reLink(pattern, textString):
+    linkStart = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[1])
+    linkEnd = int((re.split('[\(\),]', str(re.search('=>\s*https:\/\/\S*', openCFile))))[2])
+    linkFound = openCFile[linkStart:linkEnd]
+    urlOnly = re.sub('=>\s*', '', linkFound, count=1)
+    openCFile = re.sub('=>\s*https:\/\/\S*', '<a href="' + urlOnly + '">' + urlOnly + '</a>', openCFile, count=1)
+
 # defaults (change if you want to configure)
 # if you are on windows, replace all '/' with '\' (ctrl+h)
 outputDir = './docs/'
