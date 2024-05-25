@@ -59,10 +59,7 @@ for i in walkedFilesList:
                 # tempFileInfo = [path, name, extension]
                 tempFileInfo = [join(walkedFilesList[x][0],walkedFilesList[x][2][y]), walkedFilesList[x][2][y][:walkedFilesList[x][2][y].rfind('.')], walkedFilesList[x][2][y][walkedFilesList[x][2][y].rfind('.'):]]
                 allFilePaths.append(tempFileInfo)
-            # allFilePaths.append(join(walkedFilesList[x][0],walkedFilesList[x][2][y]))
-            # if 
             y += 1
-            # allFilePaths = [[path, name, extension], [path, name, extension], ...]
     x += 1
 
 z = 0
@@ -86,13 +83,14 @@ for l in cFilePaths:
         wikiToFile = openCFile[wikiStart+2:wikiEnd-2]
         ac = 0
         for n in allFilePaths:
-            if allFilePaths[ac][1] == wikiToFile:
+            if allFilePaths[ac][1] == wikiToFile or (str(allFilePaths[ac][1]) + str(allFilePaths[ac][2])) == wikiToFile:
                 wikiPath = allFilePaths[ac][0][1:]
+                wikiDisplayName = allFilePaths[ac][1]
                 if wikiPath[-4:] == '.ccc':
                     wikiPath = wikiPath[:-4]
                 break
             ac += 1
-        openCFile = wikilinkPattern.sub('<a href="' + subUrl + wikiPath + '">' + wikiPath + '</a>', openCFile, count=1)
+        openCFile = wikilinkPattern.sub('<a href="' + subUrl + wikiPath + '">' + wikiDisplayName + '</a>', openCFile, count=1)
 
     if htmlWrapper:
         tempFinalFile = htmlWrapper.replace('{{content}}', "<pre>\n" + openCFile + "\n</pre>")
