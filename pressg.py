@@ -4,6 +4,14 @@ from shutil import rmtree, copytree
 from pathlib import Path
 import re
 
+def slug(text):
+    return(text.replace(' ', '_'))
+
+def position(pattern, textString):
+    start = int((re.split('[\(\),]', str(pattern.search(textString))))[1])
+    end = int((re.split('[\(\),]', str(pattern.search(textString))))[2])
+    return(start, end)
+
 # not the biggest fan of functions but having three repeats seems a bit wasteful
 def reLink(pattern, textString, absoluteLink):
     linkPattern = re.compile(pattern, flags=re.M)
@@ -12,6 +20,7 @@ def reLink(pattern, textString, absoluteLink):
     while aliasPattern.search(textString):
         linkAliasStart = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[1])
         linkAliasEnd = int((re.split('[\(\),]', str(aliasPattern.search(textString))))[2])
+        linkAliasStart, linkAliasEnd = position(aliasPattern, textString)
         linkEnd = int((re.split('[\(\),]', str(linkPattern.search(textString))))[2])
 
         linkAliasFound = textString[linkAliasStart:linkAliasEnd]
@@ -30,9 +39,6 @@ def reLink(pattern, textString, absoluteLink):
         else:
             textString = aliasPattern.sub('<a href="' + urlOnly + '">' + aliasFound + '</a>', textString, count=1)
     return(textString)
-
-def slug(text):
-    return(text.replace(' ', '_'))
 
 # defaults (change if you want to configure)
 # if you are on windows, replace all '/' with '\' (ctrl+h)
