@@ -1,0 +1,97 @@
+# SUNRISE SUPRISE
+
+a new day always comes back around. the sun is rising again,
+                                                its a new age.
+                                                   for me.
+
+welcome back to spicata 99. its been a while, hasnt it?
+things are a little different around here. quite obviously so
+
+
+NUMBER ONE: i left the town
+
+    its nothing against the town personally. its just no
+    longer it, you know? and ive got my reasons, which i
+    might reveal in the future, but as for now, thats all
+    that you need to know.
+    for those who are in the discord server, im not going
+    anywhere, im staying there. but im going to stop 
+    pretending that we actually get stuff done and that its
+    meant to be a notes thing anymore.
+
+    that means, for the first time in a long time, spicata
+    99 is not a part of the town umbrella. im not endorsing
+    it anymore.
+
+    i am free? i guess?
+    its nice i guess, i was kind of hard carrying
+    for a long time, and now i dont need to.
+
+    h ow
+      fun!
+         (cc chennings poetry right here)
+
+
+NUMBER TWO: press
+
+    im not longer using jekyll. it just didnt work? for some reason.
+    so im kind of just abandoning it. i have no clue what
+    the problem is, but it gem is just not letting me run it. like,
+    i would install it using `bundle install` and it would run perfectly,
+    but then when i go to actually run jekyll, it would just say
+    that it's not installed. which im pretty sure it is.
+
+    if you think you've got a fix to it, the repository is still up,
+    so maybe check it out and get back to me if you know what the
+    problem is.
+
+    okay so turns out the source code repository is private so i
+    guess its not getting fixed.
+
+    i had a short run with zola, but there were some quirks with it
+    that i just couldnt figure out, especially with the themes. and
+    while these same problems were in jekyll, it had much better
+    documentation, so i could actually figure out. but with zola, the
+    documentation leaves a lot to be desired, and so i decided not to
+    use it.
+
+       which this kind of highlights a problem i have 
+       with a lot of ssg's: they are overly complex
+       for things that should be pretty simple, like
+       making a just text website.
+
+       like, hugo, jekyll, and zola and co are all cool
+       but do i need all this special yaml frontmatter
+       and special _directories and templates and other
+       stuff for things that really don't need it?
+
+       so i made press just... work. like how you'd expect.
+       its simple, and it works.
+
+
+              also, there was another influence to this whole thing:
+              oldernow from tilde.town and nightfall.city. they use a
+              whole pre-thing for their website (only their index though),
+              and ... well, you know, i agree.
+
+              i also got kind of sick of writing html and css.
+
+              so i just copied them, kind of. they don't use
+              anchor elements, because "well, do you really
+              need them?" to which i answer, yes. yes i do.
+
+              they are just there for convenience, so be glad
+              that i didnt completely remove all html. also
+              i love links. probably a carry over from my
+              digital garden and zettlekasten days.
+
+  so yeah. we are here now.
+  this is how its going to be
+  [[26-05-2024_the_future|until press+ comes]].
+
+
+IN CONCLUSION
+
+so you know how developers 'sunset' apps once they've reached their end of life?
+well, im sunrising spicata 99.
+       its a new day
