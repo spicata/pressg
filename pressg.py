@@ -15,13 +15,14 @@ def position(pattern, textString):
 def reLink(pattern, textString, absoluteLink):
     linkPattern = re.compile(pattern, flags=re.M)
     aliasPattern = re.compile(pattern + '[^\n]*$', flags=re.M)
+    aliasLine = re.compile('^[^\n\S]*' + pattern + '[^\n]*$', flags=re.M)
 
-    while aliasPattern.search(textString):
+    while aliasLine.search(textString):
         linkAliasStart, linkAliasEnd = position(aliasPattern, textString)
-        _, linkEnd = position(linkPattern, textString)
+        linkStart, linkEnd = position(linkPattern, textString)
 
         linkAliasFound = textString[linkAliasStart:linkAliasEnd]
-        linkFound = textString[linkAliasStart:linkEnd]
+        linkFound = textString[linkStart:linkEnd]
         aliasFound = textString[linkEnd+1:linkAliasEnd]
 
         urlOnly = re.sub('^=>\s*', '', linkFound, count=1, flags=re.M)
@@ -77,9 +78,9 @@ for k in allFilePaths:
 aa = 0
 for l in cFilePaths:
     openCFile = open(cFilePaths[aa][0]).read()
-    openCFile = reLink('^=>\s*https:\/\/\S*', openCFile, False)
-    openCFile = reLink('^=>\s*\/\S*', openCFile, True)
-    openCFile = reLink('^=>\s*\S*', openCFile, False)
+    openCFile = reLink('=>\s*https:\/\/\S*', openCFile, False)
+    openCFile = reLink('=>\s*\/\S*', openCFile, True)
+    openCFile = reLink('=>\s*\S*', openCFile, False)
     wikilinkPattern = re.compile('\[\[[^\n]*\]\]')
     while wikilinkPattern.search(openCFile):
         wikiStart, wikiEnd = position(wikilinkPattern, openCFile)

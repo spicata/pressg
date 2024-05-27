@@ -1,0 +1,12 @@
+# PRESS PATCH
+----------
+27-05-2024
+
+indented links with '=>' should now work properly.
+indented with spaces i mean, i havent tested tabs,
+           though they should be work the same way
+
+             for example
+             => https://nottacoz.github.io/jacaranda/
+
+      from, cecececruelangelschensis
