@@ -14,12 +14,14 @@ ill try to work on that but we'll see how it goes
 
 try to remember this:
 
- > environment.systemPackages = with pkgs; [ 
- >   stuff 
- > ];
+   > environment.systemPackages = with pkgs; [ 
+   >   stuff 
+   > ];
 
+& also
 
-   ***
+   > sudo nixos-rebuild swtich
+
 
 
 in other news, fake regex (hopscotch) is going badly and i have no clue what the problem
