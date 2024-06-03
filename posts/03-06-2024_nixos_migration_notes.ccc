@@ -1,0 +1,26 @@
+# NIXOS MIGRATION NOTES (for me)
+----------
+03-06-2024
+
+semi-technical stuff, mainly as a reminder for me.
+
+anyways i probably want to use bash + oh my bash because crush and mess works with that
+also i might use alacritty or kitty? ill need to test more because i dont really know,
+i might also just end up sticking with the default terminal, its alright on nixos.
+
+also flakes isnt really working for some apparent reason i dont really know why.
+
+ill try to work on that but we'll see how it goes
+
+try to remember this:
+
+ > environment.systemPackages = with pkgs; [ 
+ >   stuff 
+ > ];
+
+
+   ***
+
+
+in other news, fake regex (hopscotch) is going badly and i have no clue what the problem
+is.
